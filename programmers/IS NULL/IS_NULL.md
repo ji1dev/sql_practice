@@ -1,0 +1,54 @@
+# SQL 고득점 Kit (IS NULL) 풀이
+
+<br/>
+
+## 31 - 경기도에 위치한 식품창고 목록 출력하기
+```sql
+SELECT WAREHOUSE_ID,
+    WAREHOUSE_NAME,
+    ADDRESS,
+    IFNULL(FREEZER_YN, "N") AS FREEZER_YN
+FROM FOOD_WAREHOUSE
+WHERE ADDRESS LIKE "경기도%"
+ORDER BY WAREHOUSE_ID ASC
+```
+
+<br/>
+
+## 32 - 이름이 없는 동물의 아이디
+```sql
+SELECT ANIMAL_ID
+FROM ANIMAL_INS
+WHERE NAME IS NULL
+ORDER BY ANIMAL_ID ASC
+```
+
+<br/>
+
+## 33 - 이름이 있는 동물의 아이디
+```sql
+SELECT ANIMAL_ID
+FROM ANIMAL_INS
+WHERE NAME IS NOT NULL
+ORDER BY ANIMAL_ID
+```
+
+<br/>
+
+## 34 - NULL 처리하기
+```sql
+SELECT ANIMAL_TYPE,
+    IF(ISNULL(NAME), "No name", NAME) AS NAME,
+    SEX_UPON_INTAKE
+FROM ANIMAL_INS
+ORDER BY ANIMAL_ID ASC
+```
+
+<br/>
+
+## 35 - 나이 정보가 없는 회원 수 구하기
+```sql
+SELECT COUNT(*) AS USERS
+FROM USER_INFO
+WHERE AGE IS NULL
+```
