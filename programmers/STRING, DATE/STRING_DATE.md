@@ -1,0 +1,106 @@
+# SQL 고득점 Kit (String, Date) 풀이
+
+<br/>
+
+## 44 - 취소되지 않은 진료 예약 조회하기
+```sql
+SELECT APNT_NO,PT_NAME, A.PT_NO, B.MCDP_CD, DR_NAME, APNT_YMD
+FROM PATIENT A, APPOINTMENT B, DOCTOR C
+WHERE A.PT_NO = B.PT_NO
+    AND B.MDDR_ID = C.DR_ID
+    AND DATE(B.APNT_YMD) = DATE('2022-04-13')
+    AND APNT_CNCL_YN = 'N'
+    AND B.MCDP_CD = 'CS'
+ORDER BY APNT_YMD ASC
+```
+
+<br/>
+
+## 45 - 조건별로 분류하여 주문상태 출력하기
+```sql
+SELECT ORDER_ID,
+    PRODUCT_ID,
+    DATE_FORMAT(OUT_DATE, '%Y-%m-%d') AS OUT_DATE,
+    CASE
+        WHEN OUT_DATE <= DATE('2022-05-01') THEN '출고완료'
+        WHEN OUT_DATE > DATE('2022-05-01') THEN '출고대기'
+        ELSE '출고미정'
+    END AS 출고여부
+FROM FOOD_ORDER
+ORDER BY ORDER_ID ASC
+```
+
+<br/>
+
+## 46 - 루시와 엘라 찾기
+```sql
+SELECT ANIMAL_ID, NAME, SEX_UPON_INTAKE
+FROM ANIMAL_INS
+WHERE NAME IN ('Lucy', 'Ella', 'Pickle', 'Rogan', 'Sabrina', 'Mitty')
+ORDER BY ANIMAL_ID
+```
+
+<br/>
+
+## 47 - 이름에 el이 들어가는 동물 찾기
+```sql
+SELECT ANIMAL_ID, NAME
+FROM ANIMAL_INS
+WHERE ANIMAL_TYPE = 'Dog' AND NAME LIKE '%EL%'
+ORDER BY NAME
+```
+
+<br/>
+
+## 48 - 중성화 여부 파악하기
+```sql
+-- CASE를 사용하는 방법
+SELECT ANIMAL_ID,
+    NAME,
+    (CASE
+        WHEN SEX_UPON_INTAKE LIKE '%Neutered%' THEN 'O'
+        WHEN SEX_UPON_INTAKE LIKE '%Spayed%' THEN 'O'
+        ELSE 'X'
+    END) AS '중성화'
+FROM ANIMAL_INS
+ORDER BY ANIMAL_ID
+```
+```sql
+-- IF를 사용하는 방법
+SELECT ANIMAL_ID,
+    NAME,
+    IF(SEX_UPON_INTAKE LIKE 'Intact%', 'X', 'O') AS '중성화'
+FROM ANIMAL_INS
+ORDER BY ANIMAL_ID
+```
+
+<br/>
+
+## 49 - 오랜 기간 보호한 동물(2)
+```sql
+SELECT ANIMAL_ID, B.NAME
+FROM ANIMAL_INS AS A
+JOIN ANIMAL_OUTS AS B USING(ANIMAL_ID)
+ORDER BY (B.DATETIME-A.DATETIME) DESC
+LIMIT 2
+```
+
+<br/>
+
+## 50 - DATETIME에서 DATE로 형 변환
+```sql
+SELECT ANIMAL_ID, NAME, DATE_FORMAT(DATETIME, '%Y-%m-%d') AS '날짜'
+FROM ANIMAL_INS
+ORDER BY ANIMAL_ID
+```
+
+<br/>
+
+## 51 - 카테고리 별 상품 개수 구하기
+```sql
+SELECT LEFT(PRODUCT_CODE, 2) AS 'CATEGORY',
+    COUNT(PRODUCT_ID) AS PRODUCTS
+FROM PRODUCT
+GROUP BY LEFT(PRODUCT_CODE, 2) # SUBSTRING(PRODUCT_CODE, 1, 2)
+ORDER BY PRODUCT_CODE ASC
+```
